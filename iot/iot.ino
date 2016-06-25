@@ -1,44 +1,39 @@
 #include <Servo.h>
-#include <IRremote.h>
-#include <Timer.h>
 
-int led_pin = 13;
-int servo_pin = 9;
-int ir_pin = 10;
+int LED_PIN = 13;
+int SERVO_PIN = 9;
+int BUTTON_PIN = 8;
 
 Servo servo;
 int servo_pos = 0;
 int servo_state = 0;
 int servo_delay = 0;
 
-IRrecv irrecv(ir_pin);
-decode_results ir_results;
-
 void setup() {
   Serial.begin(9600);
 
   // Initialize LED output
-  pinMode(led_pin, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+  
+  // Initialize button input
+  pinMode(BUTTON_PIN, INPUT);
 
   // Initialize servo
-  servo.attach(servo_pin);
-
-  // Initialize IR
-  irrecv.enableIRIn();
+  servo.attach(SERVO_PIN);
 
   Serial.println("Setup complete");
 }
 
 void loop() {
   pollButton();
-  //updateServo();
+  updateServo();
   delay(10);
 }
 
 void updateServo() {
   if (servo_state == 0) {
-    if (servo_pos >= 0) {
-      servo_pos -= 1;
+    if (servo_pos <= 90) {
+      servo_pos += 1;
       servo.write(servo_pos);
     }
   }
@@ -72,52 +67,25 @@ void updateServo() {
 }
 
 void pollButton() {
-  if (irrecv.decode(&ir_results)) {
-    int ir_response = translateIR();
-    Serial.println("Received IR response" + ir_response);
+  if (digitalRead(BUTTON_PIN) == HIGH) {
+    Serial.println("Button pushed");
 
-    if (ir_response == 1) {
-      Serial.println("Servo enabled");
-      digitalWrite(led_pin, HIGH);
-      servo_state = 1;
-    } 
-    else if (ir_response == 2) {
+    if (servo_state != 0) {
       Serial.println("Servo disabled");
-      digitalWrite(led_pin, LOW);
+      digitalWrite(LED_PIN, LOW);
       servo_state = 0;
+    } 
+    else {
+      Serial.println("Servo enabled");
+      digitalWrite(LED_PIN, HIGH);
+      servo_state = 1;
     }
 
-    irrecv.resume(); // Receive the next value
+    while (digitalRead(BUTTON_PIN) == HIGH) { 
+      // Do nothing
+    }
   }
 }
-
-int translateIR() {
-  switch(ir_results.value) 
-  {
-  case 0xFF30CF:  
-    return 1;
-  case 0xFF18E7:  
-    return 2;
-  case 0xFF7A85:  
-    return 3;
-  case 0xFF10EF:  
-    return 4;
-  case 0xFF38C7:  
-    return 5;
-  case 0xFF5AA5:  
-    return 6;
-  case 0xFF42BD:  
-    return 7;
-  case 0xFF4AB5:  
-    return 8;
-  case 0xFF52AD:  
-    return 9;
-  default: 
-    return -1;
-  }
-} 
-
-
 
 
 
