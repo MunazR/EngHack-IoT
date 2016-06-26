@@ -5,4 +5,5 @@ const int SPEAKER_PIN = 6;
 const int RED_LED_PIN = 12;
 const int GREEN_LED_PIN = 11;
 const int BLUE_LED_PIN = 10;
+const int RELAY_PIN = 7;
 

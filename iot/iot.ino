@@ -3,6 +3,7 @@
 #include "Speaker.h"
 #include "LED.h"
 #include "Button.h"
+#include "Relay.h"
 
 Servo servo;
 int servo_pos = 90;
@@ -12,6 +13,7 @@ int servo_delay = 0;
 Speaker speaker(SPEAKER_PIN);
 LED led(RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN);
 Button button(BUTTON_PIN);
+Relay relay(RELAY_PIN);
 
 void setup() {
   Serial.begin(9600);
@@ -82,12 +84,14 @@ void pollButton() {
     if (servo_state != 0) {
       led.rgb(255, 0, 0);
       speaker.beep(50);
+      relay.disable();
       servo_state = 0;
     } 
     else {
       led.rgb(0, 255, 0);
       speaker.beep(50);
       servo.attach(SERVO_PIN);
+      relay.enable();
       servo_state = 1;
     }
 

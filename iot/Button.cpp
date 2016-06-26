@@ -16,4 +16,3 @@ int Button::pushed() {
   return -1;
 }
 
-
