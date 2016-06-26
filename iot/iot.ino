@@ -4,6 +4,9 @@ int LED_PIN = 13;
 int SERVO_PIN = 9;
 int BUTTON_PIN = 8;
 int SPEAKER_PIN = 6;
+int RED_LED = 10;
+int RED_LED = 11;
+int RED_LED = 12;
 
 Servo servo;
 int servo_pos = 90;
@@ -43,12 +46,18 @@ void updateServo() {
     if (servo_pos < 90) {
       servo_pos += 1;
       servo.write(servo_pos);
+      analogWrite(redPin, 0);   // Write green
+      analogWrite(grnPin, 255);      
+      analogWrite(bluPin, 0);
     }
   }
   else if (servo_state == 1) {
     if (servo_pos > 0) {
       servo_pos -= 1;
       servo.write(servo_pos);
+      analogWrite(redPin, 255);   // Write green
+      analogWrite(grnPin, 0);      
+      analogWrite(bluPin, 0);
     } 
     else {
       servo_state = 2;
@@ -110,6 +119,7 @@ void beep(unsigned char delayms) {
   analogWrite(SPEAKER_PIN, 0);
   delay(delayms);
 }
+
 
 
 
