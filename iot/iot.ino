@@ -30,8 +30,7 @@ void setup() {
 
   // Initialize speaker
   pinMode(SPEAKER_PIN, OUTPUT);
-  
-  
+
   rgbLED(255, 0, 0);
   beep(50);
   rgbLED(0, 255, 0);
