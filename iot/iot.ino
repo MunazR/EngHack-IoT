@@ -26,7 +26,7 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT);
 
   // Initialize servo
-  servo.attach(SERVO_PIN);
+  //servo.attach(SERVO_PIN);
 
   // Initialize speaker
   pinMode(SPEAKER_PIN, OUTPUT);
@@ -52,6 +52,8 @@ void updateServo() {
     if (servo_pos < 90) {
       servo_pos += 1;
       servo.write(servo_pos);
+    }else{
+      servo.detach();  
     }
   }
   else if (servo_state == 1) {
@@ -102,6 +104,7 @@ void pollButton() {
       rgbLED(255, 0, 0);
       beep(50);
       servo_state = 0;
+      //servo.detach();
     } 
     else {
       Serial.println("Servo enabled");
@@ -109,6 +112,7 @@ void pollButton() {
       rgbLED(0, 255, 0);
       beep(50);
       servo_state = 1;
+      servo.attach(SERVO_PIN);
     }
 
     while (digitalRead(BUTTON_PIN) == HIGH);
